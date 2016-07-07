@@ -48,5 +48,10 @@ public class AuthController {
 		List<UserRole> userRoles = UserRoleConvertor.convertFromDTO(dto);
 		return userRoleRepository.save(userRoles);
 	}
+	
+	@RequestMapping(value = "/hello", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String test() {
+		return ("Hello, Auth Server");
+	}
 
 }
