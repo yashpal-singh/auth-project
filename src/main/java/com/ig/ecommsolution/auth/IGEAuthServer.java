@@ -17,10 +17,6 @@ public class IGEAuthServer extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IGEAuthServer.class, args);
-
-		// String authorization = "Basic "
-		// + new String(Base64Utils.encode("restapp:restappsecret".getBytes()));
-		// System.out.println(authorization);
 	}
 
 	@Override
