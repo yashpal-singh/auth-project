@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,10 +32,12 @@ public class AuthController {
 	private RoleRepository roleRepository;
 	@Autowired
 	private UserRoleRepository userRoleRepository;
-	
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public User addUser(@RequestBody User user) {
+		user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
 	
