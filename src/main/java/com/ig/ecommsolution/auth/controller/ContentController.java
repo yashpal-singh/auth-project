@@ -3,6 +3,7 @@
  */
 package com.ig.ecommsolution.auth.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +13,16 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.ig.ecommsolution.auth.domain.User;
+import com.ig.ecommsolution.auth.repository.UserRepository;
 
 /**
  * @author Yashpal.Singh
@@ -27,6 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContentController {
 	
 	private String filePath = "D:\\Content";
+	
+	@Autowired
+	private UserRepository repository;
 
 	@RequestMapping(value = "/files", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String addContent(@RequestParam("file") MultipartFile file) {
@@ -93,6 +101,60 @@ public class ContentController {
 			}
 		}
 		
+	}
+	
+	@RequestMapping(value = "/image", method = RequestMethod.GET)
+	public void getImage(HttpServletResponse response) {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		try{
+			response.setContentType("image/jpeg");
+			outputStream = response.getOutputStream();
+			User user = repository.findOne("5746894c40e8874a110673e6");
+			inputStream = new ByteArrayInputStream(user.getImage());
+			int read = 0;
+			final byte[] bytes = new byte[1024];
+			while ((read = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+			outputStream.flush();			
+		} catch(IOException ie) {
+			ie.printStackTrace();
+		} catch(IllegalStateException ile) {
+			ile.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try{
+				if(inputStream != null)
+					inputStream.close();
+				if(outputStream != null)
+					outputStream.close();
+			} catch(IOException iee) {
+				iee.printStackTrace();
+			}
+		}
+	}
+	
+	
+	@RequestMapping(value = "/image", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String addImage(@RequestParam("file") MultipartFile file) {
+		try{
+			if(file != null && !file.isEmpty()) {
+				byte[] imageBytes = file.getBytes();
+				User user = repository.findOne("5746894c40e8874a110673e6");
+				user.setImage(imageBytes);
+				repository.save(user);
+			}
+			
+		} catch(IOException ie) {
+			ie.printStackTrace();
+		} catch(IllegalStateException ile) {
+			ile.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	

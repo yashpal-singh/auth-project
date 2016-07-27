@@ -20,6 +20,7 @@ public class User {
 	@Indexed(unique=true)
 	private String username;
 	private String password;
+	private byte[] image;
 
 	public User() {
 
@@ -63,6 +64,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
 	}
 
 }
