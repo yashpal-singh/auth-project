@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/auth-project
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+    
+    steps:
+      - checkout
+      - restore_cache:
+          key: auth-project-{{ checksum "pom.xml" }}
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: auth-project-{{ checksum "pom.xml" }}
+      - run: mvn clean install
