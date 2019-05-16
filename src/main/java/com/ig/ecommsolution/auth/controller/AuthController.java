@@ -38,6 +38,7 @@ public class AuthController {
 	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public User addUser(@RequestBody User user) {
 		user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
+		// Test circleci
 		return userRepository.save(user);
 	}
 	
