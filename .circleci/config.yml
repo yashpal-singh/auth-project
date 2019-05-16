@@ -9,9 +9,4 @@ jobs:
       - checkout
       - restore_cache:
           key: auth-project-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: auth-project-{{ checksum "pom.xml" }}
       - run: mvn clean install
